@@ -14,9 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.profildeveloppeur.ui.theme.ProfilDeveloppeurTheme
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,11 +40,14 @@ class MainActivity : ComponentActivity() {
 fun ProfileScreen(modifier: Modifier = Modifier) {
     Surface(
         color = Color.LightGray,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxWidth()
     ) {
         ProfileCard(
             name = "Aurélie S.",
             role = "Développeuse Java",
+            description = "En alternance chez Worldline",
+            skills = listOf("Java", "Spring Boot", "React"),
+            isAvailable = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -54,6 +59,9 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 fun ProfileCard(
     name: String,
     role: String,
+    description: String,
+    skills: List<String>,
+    isAvailable: Boolean,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -62,7 +70,10 @@ fun ProfileCard(
     ) {
         ProfileCardContent(
             name = name,
-            role = role
+            role = role,
+            description = description,
+            skills = skills,
+            isAvailable = isAvailable
         )
     }
 }
@@ -71,22 +82,77 @@ fun ProfileCard(
 fun ProfileCardContent(
     name: String,
     role: String,
+    description: String,
+    skills: List<String>,
+    isAvailable: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.padding(16.dp)
     ) {
-        Text(
-            text = name,
-            modifier = Modifier.padding(bottom = 8.dp)
+        ProfileHeader(
+            name = name,
+            role = role,
+            modifier = Modifier.padding(bottom = 16.dp)
         )
         Text(
-            text = role,
-            modifier = Modifier.padding(bottom = 8.dp)
+            text = description,
+            modifier = Modifier.padding(bottom = 8.dp)        )
+        Text(
+            text = "Compétences :",
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+        skills.forEach { skill ->
+            SkillItem(
+                skill = skill,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+        }
+        Availability(
+            isAvailable = isAvailable,
+            modifier = Modifier.padding(top = 12.dp)
+
         )
     }
 }
 
+@Composable
+fun ProfileHeader(
+    name: String,
+    role: String,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(text = name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(text = role, fontSize = 16.sp, color = Color.DarkGray)
+    }
+}
+
+@Composable
+fun SkillItem(
+    skill: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = "• $skill",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun Availability(
+    isAvailable: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = if (isAvailable) {
+            "Disponible"
+        } else {
+            "Non disponible actuellement"
+        },
+        modifier = modifier
+    )
+}
 
 @Preview(showBackground = true)
 @Composable
