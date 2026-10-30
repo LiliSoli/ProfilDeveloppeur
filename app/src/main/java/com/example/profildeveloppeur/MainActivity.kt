@@ -7,18 +7,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Surface
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.profildeveloppeur.ui.theme.ProfilDeveloppeurTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.profildeveloppeur.ui.theme.ProfilDeveloppeurTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
 fun ProfileScreen(modifier: Modifier = Modifier) {
     Surface(
         color = Color.LightGray,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxSize()
     ) {
         ProfileCard(
             name = "Aurélie S.",
@@ -48,9 +49,11 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             description = "En alternance chez Worldline",
             skills = listOf("Java", "Spring Boot", "React"),
             isAvailable = true,
+            onContactClick = {
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(32.dp)
         )
     }
 }
@@ -62,6 +65,7 @@ fun ProfileCard(
     description: String,
     skills: List<String>,
     isAvailable: Boolean,
+    onContactClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -73,7 +77,8 @@ fun ProfileCard(
             role = role,
             description = description,
             skills = skills,
-            isAvailable = isAvailable
+            isAvailable = isAvailable,
+            onContactClick = onContactClick
         )
     }
 }
@@ -85,6 +90,7 @@ fun ProfileCardContent(
     description: String,
     skills: List<String>,
     isAvailable: Boolean,
+    onContactClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -97,7 +103,8 @@ fun ProfileCardContent(
         )
         Text(
             text = description,
-            modifier = Modifier.padding(bottom = 8.dp)        )
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
         Text(
             text = "Compétences :",
             modifier = Modifier.padding(bottom = 4.dp)
@@ -111,7 +118,12 @@ fun ProfileCardContent(
         Availability(
             isAvailable = isAvailable,
             modifier = Modifier.padding(top = 12.dp)
-
+        )
+        ContactButton(
+            onContactClick = onContactClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         )
     }
 }
@@ -154,10 +166,51 @@ fun Availability(
     )
 }
 
+@Composable
+fun ContactButton(
+    onContactClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onContactClick,
+        modifier = modifier
+    ) {
+        Text(text = "Me contacter")
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun ProfileScreenPreview() {
+fun ProfileCardAvailablePreview() {
     ProfilDeveloppeurTheme {
-        ProfileScreen()
+        ProfileCard(
+            name = "Aurélie S.",
+            role = "Développeuse Java",
+            description = "En alternance chez Worldline",
+            skills = listOf("Java", "Spring Boot", "React"),
+            isAvailable = true,
+            onContactClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileCardUnavailablePreview() {
+    ProfilDeveloppeurTheme {
+        ProfileCard(
+            name = "Thomas M.",
+            role = "Développeur Java",
+            description = "Développeur Java",
+            skills = listOf("Java", "Spring", "Nuxeo"),
+            isAvailable = false,
+            onContactClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+        )
     }
 }
